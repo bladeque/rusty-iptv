@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.RustyIptv" parent="@style/Theme.Leanback">
+    <style name="Theme.RustyIptv" parent="android:Theme.Material.NoTitleBar">
     </style>
 </resources>
