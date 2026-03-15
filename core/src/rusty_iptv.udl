@@ -1,2 +1,91 @@
 namespace rusty_iptv {
 };
+
+[Error]
+enum CoreError {
+    "Storage",
+    "Parse",
+    "Network",
+    "NotFound",
+};
+
+dictionary ProviderInput {
+    string name;
+    string provider_type;
+    string url;
+    string? username;
+    string? password;
+};
+
+dictionary ChannelSummary {
+    i64 id;
+    string name;
+    string? group_title;
+    string? logo_url;
+    boolean hidden;
+    boolean is_favorite;
+};
+
+dictionary ChannelPage {
+    sequence<ChannelSummary> channels;
+    u32 total;
+    u32 page;
+    u32 page_size;
+};
+
+dictionary FilterOptions {
+    i64? preset_id;
+    string? search_query;
+    boolean show_hidden;
+};
+
+dictionary EPGEntry {
+    i64 id;
+    string channel_tvg_id;
+    string title;
+    i64 start_ts;
+    i64 end_ts;
+    string? description;
+};
+
+dictionary VodItem {
+    i64 id;
+    string name;
+    string? cover_url;
+    string stream_url;
+    string? genre;
+    string? rating;
+    string? year;
+};
+
+interface RustyCore {
+    [Throws=CoreError]
+    constructor(string db_path);
+
+    [Throws=CoreError]
+    i64 add_provider(ProviderInput provider);
+
+    [Throws=CoreError]
+    void import_m3u_from_url(i64 provider_id, string url);
+
+    [Throws=CoreError]
+    ChannelPage get_channels(u32 page, FilterOptions opts);
+
+    [Throws=CoreError]
+    sequence<ChannelSummary> search_channels(string query, u32 page);
+
+    [Throws=CoreError]
+    string get_stream_url(i64 channel_id);
+
+    [Throws=CoreError]
+    boolean toggle_favorite(i64 channel_id);
+
+    [Throws=CoreError]
+    boolean toggle_hidden(i64 channel_id);
+
+    [Throws=CoreError]
+    sequence<EPGEntry> get_epg(string tvg_id, i64 from_ts, i64 to_ts);
+
+    [Throws=CoreError]
+    sequence<string> get_groups(i64 provider_id);
+};
