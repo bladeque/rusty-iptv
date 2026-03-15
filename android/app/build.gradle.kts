@@ -44,7 +44,8 @@ android {
 }
 
 dependencies {
-    implementation("androidx.tv:tv-compose:1.0.0-beta01")
+    implementation("androidx.tv:tv-foundation:1.0.0-beta01")
+    implementation("androidx.tv:tv-material:1.0.0-beta01")
     implementation("androidx.media3:media3-exoplayer:1.3.0")
     implementation("androidx.media3:media3-ui:1.3.0")
     implementation("androidx.media3:media3-exoplayer-hls:1.3.0")
