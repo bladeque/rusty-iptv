@@ -1,1 +1,1 @@
-// rusty-iptv core library
+pub mod models;
