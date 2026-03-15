@@ -23,6 +23,8 @@ jobs:
   android-build:
     name: Android Debug Build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -38,7 +40,25 @@ jobs:
       - uses: android-actions/setup-android@v3
       - name: Build debug APK
         run: cd android && ./gradlew assembleDebug
+      - name: Rename APK
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk rusty-iptv-debug.apk
       - uses: actions/upload-artifact@v4
         with:
           name: debug-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: rusty-iptv-debug.apk
+      - name: Publish rolling latest release
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest Build
+          prerelease: true
+          files: rusty-iptv-debug.apk
+          body: |
+            Auto-updated on every push to main.
+
+            **Install on FireStick:**
+            1. Open the Downloader app
+            2. Enter this URL:
+               `https://github.com/bladeque/rusty-iptv/releases/latest/download/rusty-iptv-debug.apk`
+            3. Install and launch rusty-iptv
